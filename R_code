@@ -1,0 +1,22 @@
+#调用R包
+
+library(cluster)
+library(factoextra)
+library(readxl)
+library(openxlsx)
+library(tidyverse)#加载tidyverse包
+library(dplyr)
+library(writexl)
+#读取数据
+hsl=read_excel("F:/论文数据/同深不同林.xlsx",sheet="群落差异")#otu数据
+data=hsl[,4:22]
+results <- list()
+k <- 6
+for (i in 1:ncol(data)) {
+  var <- colnames(data)[i]
+  cluster_result <- kmeans(data[[i]], centers = k)
+  hsl[[paste0(var, "")]] <- cluster_result$cluster
+  results[[var]] <- cluster_result
+}
+hsl
+write_xlsx(hsl, "E:/Rstudio/聚类结果.xlsx")
